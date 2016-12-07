@@ -3,10 +3,10 @@ using System.Collections;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-[ExecuteInEditMode]
 public class TileMap : MonoBehaviour {
     public int size_x;
     public int size_y;
+    public Texture texture;
     public class Tile
     {
         int x, y;
@@ -22,45 +22,59 @@ public class TileMap : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        UpdateMesh();
+        
 	}
 
-    public void UpdateMesh()
+    public void CreateMesh()
     {
         if (size_x < 1) size_x = 1;
         if (size_y < 1) size_y = 1;
-        int nb_verts = (size_x + 1)*(size_y + 1);
-        Vector3[] vertices = new Vector3[nb_verts];
-        int[] triangles = new int[size_x*size_y*6];
-        Vector2[] uv = new Vector2[nb_verts];
-        Color[] colors = new Color[nb_verts];
+        int nb_tiles = size_x * size_y;
+        Vector3[] vertices = new Vector3[nb_tiles*4];
+        int[] triangles = new int[nb_tiles*6];
+        Vector2[] uv = new Vector2[nb_tiles*4];
+        
 
-        for(int i=0; i<nb_verts; i++)
+        for(int i=0; i<nb_tiles; i++)
         {
-            vertices[i] = new Vector3(i%(size_x+1), i/(size_x+1), 0);
-            uv[i] = new Vector2((i % (size_x + 1)) / (float)(size_x + 1), (i / (size_x + 1)) / (float)(size_y + 1));
-            colors[i] = new Color(1, 1, 1);
+            int quadIndex = i * 4;
+            int triangleIndex = i * 6;
+            //Set Tile in order : Left-Bottom, Left-Up, Right-Up, Right-Bottom
+            //Setting each tile vertices
+            vertices[quadIndex] = new Vector3(i%size_x, i/size_x, 0);
+            vertices[quadIndex + 1] = new Vector3(i % size_x, i / size_x + 1, 0);
+            vertices[quadIndex + 2] = new Vector3(i % size_x + 1, i / size_x + 1, 0);
+            vertices[quadIndex + 3] = new Vector3(i % size_x + 1, i / size_x, 0);
+
+            //Settings each tile uv coords
+            uv[quadIndex] = new Vector2(0,0); 
+            uv[quadIndex + 1] = new Vector2(0, 1);
+            uv[quadIndex + 2] = new Vector2(1, 1);
+            uv[quadIndex + 3] = new Vector2(1, 0);
+
+            //Settings each tile triangles
+            //First Triangle
+            triangles[triangleIndex] = quadIndex;
+            triangles[triangleIndex + 1] = quadIndex + 1;
+            triangles[triangleIndex + 2] = quadIndex + 2;
+
+            //Second Triangle
+            triangles[triangleIndex + 3] = quadIndex;
+            triangles[triangleIndex + 4] = quadIndex + 2;
+            triangles[triangleIndex + 5] = quadIndex + 3;
         }
-
-        for(int i=0;i<size_x;i++)
-            for(int j=0;j<size_y;j++)
-            {
-                triangles[(i+j*size_x)*6] = i + (j*(size_x+1));
-                triangles[(i + j * size_x) * 6 + 1] = i + ((j+1) * (size_x + 1));
-                triangles[(i + j * size_x) * 6 + 2] = (i+1) + ((j+1) * (size_x + 1));
-
-                triangles[(i + j * size_x) * 6 + 3] = i + (j * (size_x + 1));
-                triangles[(i + j * size_x) * 6 + 4] = (i+1) + ((j + 1) * (size_x + 1));
-                triangles[(i + j * size_x) * 6 + 5] = (i + 1) + (j * (size_x + 1));
-
-            }
 
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uv;
-        mesh.colors = colors;
 
         GetComponent<MeshFilter>().mesh = mesh;
+        MeshRenderer renderer = GetComponent<MeshRenderer>();
+        if (renderer.sharedMaterial == null)
+        {
+            renderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+        }
+        renderer.sharedMaterial.SetTexture("_MainTex",texture);
     }
 }
