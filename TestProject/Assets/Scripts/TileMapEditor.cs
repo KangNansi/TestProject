@@ -22,6 +22,12 @@ public class TileMapEditor : Editor {
 	
 	}
 
+    int getInvertedY(int ty)
+    {
+        var t = (target as TileMap);
+        return (t.texture.height / t.tile_height - 1) - ty;
+    }
+
     public override void OnInspectorGUI()
     {
 
@@ -63,6 +69,18 @@ public class TileMapEditor : Editor {
 
     public void OnSceneGUI()
     {
-        
+        int ControlID = GUIUtility.GetControlID(FocusType.Passive);
+        TileMap map = target as TileMap;
+        if(Event.current.type == EventType.MouseDown)
+        {
+            Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+            Plane plane = new Plane(map.getNormal(), map.transform.position);
+            float distance;
+            plane.Raycast(ray, out distance);
+            Vector3 point = ray.GetPoint(distance)-map.transform.position;
+            point = Quaternion.Inverse(map.transform.rotation)*point;
+            map.setTile((int)point.x, (int)point.y, tx, getInvertedY(ty));
+        }
+
     }
 }

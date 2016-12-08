@@ -54,6 +54,11 @@ public class TileMap : MonoBehaviour {
             setTile(i % size_x, i / size_x, tx, ty);
     }
 
+    public Vector3 getNormal()
+    {
+        return transform.rotation*Vector3.forward;
+    }
+
     public void CreateMesh()
     {
         if (size_x < 1) size_x = 1;
