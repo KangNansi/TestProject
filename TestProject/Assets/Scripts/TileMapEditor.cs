@@ -66,7 +66,6 @@ public class TileMapEditor : Editor {
     public void OnSceneGUI()
     {
         int ControlID = GUIUtility.GetControlID(FocusType.Passive);
-        TileMap map = target as TileMap;
 		HandleUtility.AddDefaultControl (ControlID);
 		switch (Event.current.type) {
 		case EventType.MouseDrag:

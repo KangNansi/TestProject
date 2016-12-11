@@ -67,6 +67,8 @@
     <Compile Include="Assets\Scripts\LookAtPointEditor.cs" />
     <Compile Include="Assets\Scripts\TileMap.cs" />
     <Compile Include="Assets\Scripts\TileMapEditor.cs" />
+    <Compile Include="Assets\Scripts\WorldMap.cs" />
+    <Compile Include="Assets\Scripts\WorldMapEditor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

@@ -37,10 +37,21 @@ public class TileMap : MonoBehaviour {
         
 	}
 
+    public void setTexture(Texture text)
+    {
+        texture = text;
+        tileSizeX = tile_width / (float)texture.width;
+        tileSizeY = tile_height / (float)texture.height;
+    }
+
     public void setTile(int x, int y, int tx, int ty)
     {
 		if (x < 0 || y < 0 || x >= size_x || y >= size_y)
-			return;
+        {
+            print("tile out of range: X=" + x + " Y=" + y);
+            return;
+        }
+
 		map [x+(y*size_x)].x = tx;
 		map [x+(y*size_x)].y = ty;
         Vector2[] uv = GetComponent<MeshFilter>().sharedMesh.uv;
@@ -129,7 +140,9 @@ public class TileMap : MonoBehaviour {
     }
 
 	public void CreateMap(){
-		map = new Tile[size_x*size_y];
+        if (size_x < 1) size_x = 1;
+        if (size_y < 1) size_y = 1;
+        map = new Tile[size_x*size_y];
 		CreateMesh ();
 		for (int i = 0; i < size_x; i++)
 			for (int j = 0; j < size_y; j++) {
@@ -137,12 +150,4 @@ public class TileMap : MonoBehaviour {
 			}
 	}
 
-	void RebuildMapToInsert(int x, int y, int tx, int ty){
-		Tile[] old_map = map;
-		int x_offset = (x < 0) ? -x : 0;
-		int y_offset = (y < 0) ? -y : 0;
-		int old_size_x = size_x;
-		int old_size_y = size_y;
-
-	}
 }
