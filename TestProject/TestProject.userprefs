@@ -1,0 +1,15 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\WorldMap.cs">
+    <Files>
+      <File FileName="Assets\Scripts\TileMap.cs" Line="137" Column="5" />
+      <File FileName="Assets\Scripts\TileMapEditor.cs" Line="21" Column="5" />
+      <File FileName="Assets\Scripts\WorldMap.cs" Line="6" Column="2" />
+      <File FileName="Assets\Scripts\WorldMapEditor.cs" Line="13" Column="48" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

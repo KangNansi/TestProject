@@ -9,13 +9,21 @@ public class TileMap : MonoBehaviour {
     public Texture texture;
     public int tile_width;
     public int tile_height;
-    float tileSizeX=1.0f;
-    float tileSizeY=1.0f;
-    public class Tile
+	[SerializeField]
+    private float tileSizeX=1.0f;
+	[SerializeField]
+    private float tileSizeY=1.0f;
+	[System.Serializable]
+    struct Tile
     {
-        int x, y;
-
+        public int x, y;
+		public Tile(int tx, int ty){
+			x=tx; y=ty;
+		}
     }
+	[SerializeField]
+	private Tile[] map;
+
 
     
 
@@ -31,12 +39,16 @@ public class TileMap : MonoBehaviour {
 
     public void setTile(int x, int y, int tx, int ty)
     {
+		if (x < 0 || y < 0 || x >= size_x || y >= size_y)
+			return;
+		map [x+(y*size_x)].x = tx;
+		map [x+(y*size_x)].y = ty;
         Vector2[] uv = GetComponent<MeshFilter>().sharedMesh.uv;
         int quadIndex = (x + (y * size_x)) * 4;
-        uv[quadIndex] = new Vector2(tx * tileSizeX, ty * tileSizeY);
-        uv[quadIndex+1] = new Vector2(tx * tileSizeX, (ty+1) * tileSizeY);
-        uv[quadIndex+2] = new Vector2((tx+1) * tileSizeX, (ty+1) * tileSizeY);
-        uv[quadIndex+3] = new Vector2((tx+1) * tileSizeX, ty * tileSizeY);
+		uv[quadIndex] = new Vector2(tx * tileSizeX+0.0001f, ty * tileSizeY+0.0001f);
+		uv[quadIndex+1] = new Vector2(tx * tileSizeX+0.0001f, (ty+1) * tileSizeY-0.0001f);
+		uv[quadIndex+2] = new Vector2((tx+1) * tileSizeX-0.0001f, (ty+1) * tileSizeY-0.0001f);
+		uv[quadIndex+3] = new Vector2((tx+1) * tileSizeX-0.0001f, ty * tileSizeY+0.0001f);
         GetComponent<MeshFilter>().sharedMesh.uv = uv;
     }
 
@@ -115,4 +127,22 @@ public class TileMap : MonoBehaviour {
         }
         renderer.sharedMaterial.SetTexture("_MainTex",texture);
     }
+
+	public void CreateMap(){
+		map = new Tile[size_x*size_y];
+		CreateMesh ();
+		for (int i = 0; i < size_x; i++)
+			for (int j = 0; j < size_y; j++) {
+				setTile (i, j, 0, 0);
+			}
+	}
+
+	void RebuildMapToInsert(int x, int y, int tx, int ty){
+		Tile[] old_map = map;
+		int x_offset = (x < 0) ? -x : 0;
+		int y_offset = (y < 0) ? -y : 0;
+		int old_size_x = size_x;
+		int old_size_y = size_y;
+
+	}
 }
