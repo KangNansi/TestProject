@@ -55,12 +55,26 @@ public class TileMap : MonoBehaviour {
 		map [x+(y*size_x)].x = tx;
 		map [x+(y*size_x)].y = ty;
         Vector2[] uv = GetComponent<MeshFilter>().sharedMesh.uv;
+        int[] triangles = GetComponent<MeshFilter>().sharedMesh.triangles;
         int quadIndex = (x + (y * size_x)) * 4;
-		uv[quadIndex] = new Vector2(tx * tileSizeX+0.0001f, ty * tileSizeY+0.0001f);
+        int triangleIndex = (x + (y * size_x)) * 6;
+
+        //First Triangle
+        triangles[triangleIndex] = quadIndex;
+        triangles[triangleIndex + 1] = quadIndex + 1;
+        triangles[triangleIndex + 2] = quadIndex + 2;
+
+        //Second Triangle
+        triangles[triangleIndex + 3] = quadIndex;
+        triangles[triangleIndex + 4] = quadIndex + 2;
+        triangles[triangleIndex + 5] = quadIndex + 3;
+
+        uv[quadIndex] = new Vector2(tx * tileSizeX+0.0001f, ty * tileSizeY+0.0001f);
 		uv[quadIndex+1] = new Vector2(tx * tileSizeX+0.0001f, (ty+1) * tileSizeY-0.0001f);
 		uv[quadIndex+2] = new Vector2((tx+1) * tileSizeX-0.0001f, (ty+1) * tileSizeY-0.0001f);
 		uv[quadIndex+3] = new Vector2((tx+1) * tileSizeX-0.0001f, ty * tileSizeY+0.0001f);
         GetComponent<MeshFilter>().sharedMesh.uv = uv;
+        GetComponent<MeshFilter>().sharedMesh.triangles = triangles;
     }
 
     public void randomizeTile()
@@ -115,14 +129,14 @@ public class TileMap : MonoBehaviour {
 
             //Settings each tile triangles
             //First Triangle
-            triangles[triangleIndex] = quadIndex;
-            triangles[triangleIndex + 1] = quadIndex + 1;
-            triangles[triangleIndex + 2] = quadIndex + 2;
+            triangles[triangleIndex] = 0;
+            triangles[triangleIndex + 1] = 0;
+            triangles[triangleIndex + 2] = 0;
 
             //Second Triangle
-            triangles[triangleIndex + 3] = quadIndex;
-            triangles[triangleIndex + 4] = quadIndex + 2;
-            triangles[triangleIndex + 5] = quadIndex + 3;
+            triangles[triangleIndex + 3] = 0;
+            triangles[triangleIndex + 4] = 0;
+            triangles[triangleIndex + 5] = 0;
         }
 
         Mesh mesh = new Mesh();
@@ -144,10 +158,10 @@ public class TileMap : MonoBehaviour {
         if (size_y < 1) size_y = 1;
         map = new Tile[size_x*size_y];
 		CreateMesh ();
-		for (int i = 0; i < size_x; i++)
+		/*for (int i = 0; i < size_x; i++)
 			for (int j = 0; j < size_y; j++) {
 				setTile (i, j, 0, 0);
-			}
+			}*/
 	}
 
 }
