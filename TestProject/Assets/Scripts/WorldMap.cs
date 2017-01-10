@@ -1,26 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+[System.Serializable]
+public struct MapKey
+{
+    public int x;
+    public int y;
+    public MapKey(int nx, int ny)
+    {
+        x = nx;
+        y = ny;
+    }
+}
 
+[System.Serializable]
+public class MapDictionary : SerializableDictionary<MapKey, TileMap> { }
+
+[System.Serializable]
 public class WorldMap : MonoBehaviour {
 
-	struct MapKey{
-		public int x;
-		public int y;
-		public MapKey(int nx, int ny){
-			x=nx;
-			y=ny;
-		}
-	}
+    
 
 
     public Texture texture;
     public int tileWidth;
     public int tileHeight;
-	int mapSizeX=30;
-	int mapSizeY=30;
+    [SerializeField]
+    int mapSizeX=30;
+    [SerializeField]
+    int mapSizeY=30;
 
-	Dictionary<MapKey, TileMap> worldMap;
+    [SerializeField]
+	MapDictionary worldMap;
 
 	// Use this for initialization
 	void Start () {
@@ -40,7 +51,7 @@ public class WorldMap : MonoBehaviour {
     public void SetTile(int x, int y, int tx, int ty){
 		MapKey mapKey= new MapKey(Mathf.FloorToInt(x/(float)mapSizeX),Mathf.FloorToInt(y/(float)mapSizeY));
 		if (worldMap == null)
-			worldMap = new Dictionary<MapKey, TileMap> ();
+			worldMap = new MapDictionary ();
 		if(!worldMap.ContainsKey(mapKey)){
 			GameObject newmap = new GameObject(); 
 			newmap.transform.SetParent(transform,false);

@@ -3,6 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
+[System.Serializable]
 public class TileMap : MonoBehaviour {
     public int size_x;
     public int size_y;
