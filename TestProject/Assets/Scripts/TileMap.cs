@@ -3,6 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshCollider))]
 [System.Serializable]
 public class TileMap : MonoBehaviour {
     public int size_x;
@@ -78,6 +79,22 @@ public class TileMap : MonoBehaviour {
         GetComponent<MeshFilter>().sharedMesh.triangles = triangles;
     }
 
+    public void modifyHeight(Vector2 center, float range, float value)
+    {
+        Vector3[] vertices = GetComponent<MeshFilter>().sharedMesh.vertices;
+        for(int i = 0; i < size_x * size_y * 4; i++)
+        {
+            float distance = Vector2.Distance(vertices[i], center);
+            if (distance < range)
+            {
+                vertices[i].z += value * ((range - distance)/range);
+            }
+        }
+        GetComponent<MeshFilter>().sharedMesh.vertices = vertices;
+        GetComponent<MeshCollider>().sharedMesh = null;
+        GetComponent<MeshCollider>().sharedMesh = GetComponent<MeshFilter>().sharedMesh;
+    }
+
     public void randomizeTile()
     {
         int maxTx = texture.width/tile_width;
@@ -146,6 +163,7 @@ public class TileMap : MonoBehaviour {
         mesh.uv = uv;
 
         GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         if (renderer.sharedMaterial == null)
         {

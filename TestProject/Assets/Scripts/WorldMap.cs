@@ -56,7 +56,7 @@ public class WorldMap : MonoBehaviour {
 			GameObject newmap = new GameObject(); 
 			newmap.transform.SetParent(transform,false);
 			newmap.transform.position = transform.position + new Vector3(mapKey.x*mapSizeX, mapKey.y*mapSizeY, 0);
-			//newmap.hideFlags = HideFlags.HideInHierarchy;
+			newmap.hideFlags = HideFlags.HideInHierarchy;
 			TileMap tmap = newmap.AddComponent<TileMap> ();
             tmap.tile_width = tileWidth;
             tmap.tile_height = tileHeight;
@@ -69,5 +69,22 @@ public class WorldMap : MonoBehaviour {
         
 		worldMap [mapKey].setTile ((x%mapSizeX+mapSizeX)%mapSizeX, (y % mapSizeY + mapSizeY) % mapSizeY, tx, ty);
 	}
+
+    public void modifyHeight(Vector2 center, float range, float value)
+    {
+        int rangeX = (int)range / mapSizeX+1;
+        int rangeY = (int)range / mapSizeY+1;
+        
+        for(int i=-rangeX;i<=rangeX;i++)
+            for(int j = -rangeY; j <= rangeY; j++)
+            {
+                MapKey mapKey = new MapKey(Mathf.FloorToInt((int)center.x / (float)mapSizeX + i),
+                                            Mathf.FloorToInt((int)center.y / (float)mapSizeY + j));
+                if (worldMap == null || !worldMap.ContainsKey(mapKey))
+                    continue;
+                Vector2 mcenter = center - (Vector2)worldMap[mapKey].transform.localPosition;
+                worldMap[mapKey].modifyHeight(mcenter, range, value);
+            }
+    }
 
 }
