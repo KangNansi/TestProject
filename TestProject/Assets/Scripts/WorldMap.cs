@@ -23,6 +23,7 @@ public class WorldMap : MonoBehaviour {
 
 
     public Texture texture;
+    private Material material;
     public int tileWidth;
     public int tileHeight;
     [SerializeField]
@@ -55,15 +56,17 @@ public class WorldMap : MonoBehaviour {
 		if(!worldMap.ContainsKey(mapKey)){
 			GameObject newmap = new GameObject(); 
 			newmap.transform.SetParent(transform,false);
-			newmap.transform.position = transform.position + new Vector3(mapKey.x*mapSizeX, mapKey.y*mapSizeY, 0);
+			newmap.transform.localPosition = new Vector3(mapKey.x*mapSizeX, mapKey.y*mapSizeY, 0);
 			newmap.hideFlags = HideFlags.HideInHierarchy;
 			TileMap tmap = newmap.AddComponent<TileMap> ();
             tmap.tile_width = tileWidth;
             tmap.tile_height = tileHeight;
+            tmap.GetComponent<MeshRenderer>().material = material;
             tmap.setTexture(texture);
             tmap.size_x = mapSizeX;
             tmap.size_y = mapSizeY;
 			tmap.CreateMap ();
+            
 			worldMap.Add(mapKey,tmap);
 		}
         
@@ -85,6 +88,15 @@ public class WorldMap : MonoBehaviour {
                 Vector2 mcenter = center - (Vector2)worldMap[mapKey].transform.localPosition;
                 worldMap[mapKey].modifyHeight(mcenter, range, value);
             }
+    }
+
+    public void setMaterial(Material mat)
+    {
+        material = mat;
+        foreach(KeyValuePair<MapKey, TileMap> entry in worldMap)
+        {
+            entry.Value.GetComponent<MeshRenderer>().material = mat;
+        }
     }
 
 }

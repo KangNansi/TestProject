@@ -93,6 +93,7 @@ public class TileMap : MonoBehaviour {
         GetComponent<MeshFilter>().sharedMesh.vertices = vertices;
         GetComponent<MeshCollider>().sharedMesh = null;
         GetComponent<MeshCollider>().sharedMesh = GetComponent<MeshFilter>().sharedMesh;
+        UpdateMesh();
     }
 
     public void randomizeTile()
@@ -170,6 +171,7 @@ public class TileMap : MonoBehaviour {
             renderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
         }
         renderer.sharedMaterial.SetTexture("_MainTex",texture);
+        UpdateMesh();
     }
 
 	public void CreateMap(){
@@ -182,5 +184,11 @@ public class TileMap : MonoBehaviour {
 				setTile (i, j, 0, 0);
 			}*/
 	}
+
+    public void UpdateMesh()
+    {
+        GetComponent<MeshFilter>().sharedMesh.RecalculateBounds();
+        GetComponent<MeshFilter>().sharedMesh.RecalculateNormals();
+    }
 
 }

@@ -18,6 +18,8 @@ public class WorldMapEditor : Editor {
     };
     Tool tool = Tool.Brush;
 
+    Material material;
+
     int getInvertedY(int ty)
     {
         var t = (target as WorldMap);
@@ -31,11 +33,17 @@ public class WorldMapEditor : Editor {
         serializedObject.ApplyModifiedProperties();
         var t = (target as WorldMap);
         Rect texRect = new Rect(0, 0, t.texture.width, t.texture.height);
+        Material mat = (Material)EditorGUILayout.ObjectField("material", material, typeof(Material));
+        if (mat != material)
+        {
+            t.setMaterial(mat);
+            material = mat;
+        }
 
         //Tool Selection
-        if (GUILayout.Button("Brush"))
+        if (GUILayout.Toggle((tool == Tool.Brush) ? true:false,"Brush", "Button"))
             tool = Tool.Brush;
-        if (GUILayout.Button("HeightBrush"))
+        if (GUILayout.Toggle((tool == Tool.Heightbrush) ? true : false, "HeightBrush", "Button"))
             tool = Tool.Heightbrush;
 
         EditorGUILayout.LabelField("Brush Size:");
