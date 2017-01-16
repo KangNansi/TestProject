@@ -77,6 +77,7 @@ public class TileMap : MonoBehaviour {
 		uv[quadIndex+3] = new Vector2((tx+1) * tileSizeX-0.0001f, ty * tileSizeY+0.0001f);
         GetComponent<MeshFilter>().sharedMesh.uv = uv;
         GetComponent<MeshFilter>().sharedMesh.triangles = triangles;
+        UpdateMesh();
     }
 
     public void modifyHeight(Vector2 center, float range, float value)

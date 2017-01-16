@@ -77,6 +77,7 @@ public class WorldMapEditor : Editor {
     {
         int ControlID = GUIUtility.GetControlID(FocusType.Passive);
         HandleUtility.AddDefaultControl(ControlID);
+
         switch (Event.current.type)
         {
             case EventType.MouseDrag:

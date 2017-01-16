@@ -83,8 +83,25 @@ public class WorldMap : MonoBehaviour {
             {
                 MapKey mapKey = new MapKey(Mathf.FloorToInt((int)center.x / (float)mapSizeX + i),
                                             Mathf.FloorToInt((int)center.y / (float)mapSizeY + j));
-                if (worldMap == null || !worldMap.ContainsKey(mapKey))
-                    continue;
+                if (worldMap == null)
+                    worldMap = new MapDictionary();
+                if (!worldMap.ContainsKey(mapKey))
+                {
+                    GameObject newmap = new GameObject();
+                    newmap.transform.SetParent(transform, false);
+                    newmap.transform.localPosition = new Vector3(mapKey.x * mapSizeX, mapKey.y * mapSizeY, 0);
+                    newmap.hideFlags = HideFlags.HideInHierarchy;
+                    TileMap tmap = newmap.AddComponent<TileMap>();
+                    tmap.tile_width = tileWidth;
+                    tmap.tile_height = tileHeight;
+                    tmap.GetComponent<MeshRenderer>().material = material;
+                    tmap.setTexture(texture);
+                    tmap.size_x = mapSizeX;
+                    tmap.size_y = mapSizeY;
+                    tmap.CreateMap();
+
+                    worldMap.Add(mapKey, tmap);
+                }
                 Vector2 mcenter = center - (Vector2)worldMap[mapKey].transform.localPosition;
                 worldMap[mapKey].modifyHeight(mcenter, range, value);
             }
