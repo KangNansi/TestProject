@@ -65,10 +65,16 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\LookAtPoint.cs" />
     <Compile Include="Assets\Scripts\LookAtPointEditor.cs" />
+    <Compile Include="Assets\Scripts\Road.cs" />
+    <Compile Include="Assets\Scripts\RoadEditor.cs" />
+    <Compile Include="Assets\Scripts\SerializableDictionnary.cs" />
     <Compile Include="Assets\Scripts\TileMap.cs" />
     <Compile Include="Assets\Scripts\TileMapEditor.cs" />
     <Compile Include="Assets\Scripts\WorldMap.cs" />
     <Compile Include="Assets\Scripts\WorldMapEditor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shader\Grass.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
