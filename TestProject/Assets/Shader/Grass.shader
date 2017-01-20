@@ -3,6 +3,7 @@
 		_Scale("Scale", Range(0.0,100.0)) = 100.0
 		_Color("Color", Color) = (1.0,1.0,1.0)
 		_Scale2("Scale2", Range(0.0,5.0)) = 1.0
+		_Scale3("Scale3", Range(0.0,5.0)) = 1.0
 	}
 	SubShader{
 		Tags { "RenderType" = "Opaque" }
@@ -19,6 +20,7 @@
 		float _Scale;
 		float3 _Color;
 		float _Scale2;
+		float _Scale3;
 
 		struct Input {
 			float2 uv_MainTex;
@@ -53,15 +55,15 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
-			float alt = 1 - frac(noise(IN.worldPos.z + noise(IN.worldPos * _Scale2))) / 3;
+			float alt = 1 - frac(noise(_Scale3*(IN.worldPos.z + noise(IN.worldPos * _Scale2)))) / 3;
 			float3 color = { 0.5,0.2,0.3 };
-			float seed = 1-frac(noise(IN.worldPos*_Scale))/7.;
+			float seed = 1-frac(noise(float3(IN.worldPos.x*_Scale, IN.worldPos.y*_Scale,0)))/7.;
 
 			o.Albedo = _Color*half3(seed,seed,seed)*alt;
-
+			o.Normal = seed;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = 0.1;
-			o.Smoothness = 0.1;
+			o.Smoothness = 1;
 			o.Alpha = 1;
 		}
 		ENDCG
